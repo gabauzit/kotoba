@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src https://api.github.com https://generativelanguage.googleapis.com https://api.mistral.ai https://api.anthropic.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#b2372a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="icon" href="icon.png">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>Kotoba</title>
+  <link rel="stylesheet" href="styles.css?v=2.0.0">
+  <link rel="stylesheet" href="web.css?v=2.0.0">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">言</span>
+      <div>
+        <div class="brand-name">Kotoba</div>
+        <div class="brand-sub" id="dayLabel">Jour 1</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="nav-item" data-view="review"><span class="nav-jp">復習</span><span class="nav-fr">Réviser</span><span class="badge" id="badgeDue"></span></button>
+      <button class="nav-item" data-view="vocab"><span class="nav-jp">単語</span><span class="nav-fr">Vocabulaire</span><span class="badge quiet" id="badgeTotal"></span></button>
+      <button class="nav-item" data-view="add"><span class="nav-jp">追加</span><span class="nav-fr">Ajouter</span></button>
+      <button class="nav-item" data-view="grammar"><span class="nav-jp">文法</span><span class="nav-fr">Grammaire</span><span class="badge" id="badgeGrammar"></span></button>
+      <button class="nav-item" data-view="reading"><span class="nav-jp">読解</span><span class="nav-fr">Lecture</span></button>
+      <button class="nav-item" data-view="writing"><span class="nav-jp">作文</span><span class="nav-fr">Écriture</span></button>
+      <button class="nav-item" data-view="translation"><span class="nav-jp">和訳</span><span class="nav-fr">Traduction</span></button>
+      <button class="nav-item" data-view="stats"><span class="nav-jp">統計</span><span class="nav-fr">Statistiques</span></button>
+      <button class="nav-item" data-view="settings"><span class="nav-jp">設定</span><span class="nav-fr">Réglages</span></button>
+    </nav>
+    <div class="sidebar-foot"><div id="sidebarFoot"></div><button class="sync-pill" id="syncPill" hidden></button></div>
+  </aside>
+
+  <main class="main">
+    <section class="view" id="view-review"></section>
+    <section class="view" id="view-vocab"></section>
+    <section class="view" id="view-add"></section>
+    <section class="view" id="view-grammar"></section>
+    <section class="view" id="view-reading"></section>
+    <section class="view" id="view-writing"></section>
+    <section class="view" id="view-translation"></section>
+    <section class="view" id="view-stats"></section>
+    <section class="view" id="view-settings"></section>
+  </main>
+
+  <div class="modal-backdrop" id="modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" id="modalBox"></div>
+  </div>
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="config.js?v=2.0.0"></script>
+  <script src="github-core.js?v=2.0.0"></script>
+  <script src="ai-core.js?v=2.0.0"></script>
+  <script src="web-api.js?v=2.0.0"></script>
+  <script src="vendor/chart.umd.min.js?v=2.0.0"></script>
+  <script src="motion.js?v=2.0.0"></script>
+  <script src="fsrs.js?v=2.0.0"></script>
+  <script src="merge.js?v=2.0.0"></script>
+  <script src="store.js?v=2.0.0"></script>
+  <script src="sync.js?v=2.0.0"></script>
+  <script src="stats.js?v=2.0.0"></script>
+  <script src="app.js?v=2.0.0"></script>
+  <script src="reading.js?v=2.0.0"></script>
+  <script src="translate.js?v=2.0.0"></script>
+  <script src="grammar.js?v=2.0.0"></script>
+</body>
+</html>
