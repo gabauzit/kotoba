@@ -12,8 +12,8 @@
   <link rel="apple-touch-icon" href="icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <title>Kotoba</title>
-  <link rel="stylesheet" href="styles.css?v=2.0.0">
-  <link rel="stylesheet" href="web.css?v=2.0.0">
+  <link rel="stylesheet" href="styles.css?v=2.1.0">
+  <link rel="stylesheet" href="web.css?v=2.1.0">
 </head>
 <body>
   <aside class="sidebar">
@@ -25,15 +25,13 @@
       </div>
     </div>
     <nav class="nav">
-      <button class="nav-item" data-view="review"><span class="nav-jp">復習</span><span class="nav-fr">Réviser</span><span class="badge" id="badgeDue"></span></button>
-      <button class="nav-item" data-view="vocab"><span class="nav-jp">単語</span><span class="nav-fr">Vocabulaire</span><span class="badge quiet" id="badgeTotal"></span></button>
-      <button class="nav-item" data-view="add"><span class="nav-jp">追加</span><span class="nav-fr">Ajouter</span></button>
-      <button class="nav-item" data-view="grammar"><span class="nav-jp">文法</span><span class="nav-fr">Grammaire</span><span class="badge" id="badgeGrammar"></span></button>
-      <button class="nav-item" data-view="reading"><span class="nav-jp">読解</span><span class="nav-fr">Lecture</span></button>
-      <button class="nav-item" data-view="writing"><span class="nav-jp">作文</span><span class="nav-fr">Écriture</span></button>
-      <button class="nav-item" data-view="translation"><span class="nav-jp">和訳</span><span class="nav-fr">Traduction</span></button>
-      <button class="nav-item" data-view="stats"><span class="nav-jp">統計</span><span class="nav-fr">Statistiques</span></button>
-      <button class="nav-item" data-view="settings"><span class="nav-jp">設定</span><span class="nav-fr">Réglages</span></button>
+      <button class="nav-item" data-view="review"><span class="nav-jp">単語</span><span class="nav-fr"><span class="nf-l">Vocabulaire</span><span class="nf-s">Vocab</span></span><span class="badge" id="badgeDue"></span></button>
+      <button class="nav-item" data-view="grammar"><span class="nav-jp">文法</span><span class="nav-fr"><span class="nf-l">Grammaire</span><span class="nf-s">Grammaire</span></span><span class="badge" id="badgeGrammar"></span></button>
+      <button class="nav-item" data-view="reading"><span class="nav-jp">読解</span><span class="nav-fr"><span class="nf-l">Lecture</span><span class="nf-s">Lecture</span></span></button>
+      <button class="nav-item" data-view="writing"><span class="nav-jp">作文</span><span class="nav-fr"><span class="nf-l">Écriture</span><span class="nf-s">Écriture</span></span></button>
+      <button class="nav-item" data-view="translation"><span class="nav-jp">和訳</span><span class="nav-fr"><span class="nf-l">Traduction</span><span class="nf-s">Trad.</span></span></button>
+      <button class="nav-item" data-view="stats"><span class="nav-jp">統計</span><span class="nav-fr"><span class="nf-l">Statistiques</span><span class="nf-s">Stats</span></span></button>
+      <button class="nav-item" data-view="settings"><span class="nav-jp">設定</span><span class="nav-fr"><span class="nf-l">Réglages</span><span class="nf-s">Réglages</span></span></button>
     </nav>
     <div class="sidebar-foot"><div id="sidebarFoot"></div><button class="sync-pill" id="syncPill" hidden></button></div>
   </aside>
@@ -55,20 +53,20 @@
   </div>
   <div class="toast" id="toast" hidden></div>
 
-  <script src="config.js?v=2.0.0"></script>
-  <script src="github-core.js?v=2.0.0"></script>
-  <script src="ai-core.js?v=2.0.0"></script>
-  <script src="web-api.js?v=2.0.0"></script>
-  <script src="vendor/chart.umd.min.js?v=2.0.0"></script>
-  <script src="motion.js?v=2.0.0"></script>
-  <script src="fsrs.js?v=2.0.0"></script>
-  <script src="merge.js?v=2.0.0"></script>
-  <script src="store.js?v=2.0.0"></script>
-  <script src="sync.js?v=2.0.0"></script>
-  <script src="stats.js?v=2.0.0"></script>
-  <script src="app.js?v=2.0.0"></script>
-  <script src="reading.js?v=2.0.0"></script>
-  <script src="translate.js?v=2.0.0"></script>
-  <script src="grammar.js?v=2.0.0"></script>
+  <script src="config.js?v=2.1.0"></script>
+  <script src="github-core.js?v=2.1.0"></script>
+  <script src="ai-core.js?v=2.1.0"></script>
+  <script src="web-api.js?v=2.1.0"></script>
+  <script src="vendor/chart.umd.min.js?v=2.1.0"></script>
+  <script src="motion.js?v=2.1.0"></script>
+  <script src="fsrs.js?v=2.1.0"></script>
+  <script src="merge.js?v=2.1.0"></script>
+  <script src="store.js?v=2.1.0"></script>
+  <script src="sync.js?v=2.1.0"></script>
+  <script src="stats.js?v=2.1.0"></script>
+  <script src="app.js?v=2.1.0"></script>
+  <script src="reading.js?v=2.1.0"></script>
+  <script src="translate.js?v=2.1.0"></script>
+  <script src="grammar.js?v=2.1.0"></script>
 </body>
 </html>

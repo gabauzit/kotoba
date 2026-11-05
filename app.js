@@ -116,13 +116,28 @@
     });
   }
 
+  /* ---------- Onglet Vocabulaire : Réviser · Mots · Ajouter ---------- */
+  const WORD_VIEWS = ['review', 'vocab', 'add'];
+  function wordsHead(active, lead) {
+    const c = S.counts();
+    const due = c.learning + c.review + c.newCards;
+    return `<div class="view-head w-head"><div><h1><span class="h-jp">単語</span>Vocabulaire</h1>${lead ? `<p class="lead"${lead.id ? ` id="${lead.id}"` : ''}>${lead.html || ''}</p>` : ''}</div>
+      <div class="seg g-tabs w-tabs">
+        <button data-w="review" class="${active === 'review' ? 'on' : ''}">Réviser${due ? ` <em>${due}</em>` : ''}</button>
+        <button data-w="vocab" class="${active === 'vocab' ? 'on' : ''}">Mots${c.total ? ` <em>${c.total}</em>` : ''}</button>
+        <button data-w="add" class="${active === 'add' ? 'on' : ''}">+ Ajouter</button>
+      </div></div>`;
+  }
+  function wireWordsHead(root) { $$('.w-tabs button', root).forEach(b => b.onclick = () => { if (view !== b.dataset.w) show(b.dataset.w); }); }
+
   /* ---------- Navigation ---------- */
   function show(v) {
     if (session && v !== 'review' && !session.done) {
       // on garde la séance en mémoire : on pourra la reprendre
     }
     view = v;
-    $$('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.view === v));
+    const navV = WORD_VIEWS.includes(v) ? 'review' : v; // Réviser, Mots et Ajouter partagent l'onglet Vocabulaire
+    $$('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.view === navV));
     $$('.view').forEach(s => s.classList.toggle('active', s.id === 'view-' + v));
     Motion.syncNav();
     render();
@@ -134,7 +149,7 @@
   function enterView(v) {
     if (['reading', 'writing', 'translation', 'grammar'].includes(v)) return; // ces pages gèrent leurs propres animations (rendu asynchrone)
     const root = $('#view-' + v);
-    Motion.stagger(root, '.counter, .home-actions > .btn, .kpi, .range-row, .panel, .vrow:not(.head), .toolbar, .form-card, .recent .chip, .set-group, .empty', { step: 26, max: 26 });
+    Motion.stagger(root, '.w-head, .counter, .home-actions > .btn, .kpi, .range-row, .panel, .vrow:not(.head), .toolbar, .form-card, .recent .chip, .set-group, .empty', { step: 26, max: 26 });
     Motion.countUp(root, '.counter b, .kpi-value');
   }
 
@@ -161,7 +176,7 @@
     const c = S.counts();
     const due = c.learning + c.review + c.newCards;
     setBadge($('#badgeDue'), due ? String(due) : '');
-    setBadge($('#badgeTotal'), c.total ? String(c.total) : '');
+    if ($('#badgeTotal')) setBadge($('#badgeTotal'), c.total ? String(c.total) : '');
     if (window.Grammar) { const g = window.Grammar.counts(); const n = g.review + g.learning + g.newCards; setBadge($('#badgeGrammar'), n ? String(n) : ''); }
     $('#dayLabel').textContent = S.data.startDay == null ? 'Bienvenue' : `Jour ${S.currentDayNumber()}`;
     const mastered = S.data.cards.filter(x => S.isMastered(x)).length;
@@ -182,13 +197,14 @@
     const dayTxt = S.data.startDay == null ? '一日目' : `第${S.currentDayNumber()}日`;
 
     if (!c.total) {
-      root.innerHTML = `<div class="home">
+      root.innerHTML = `${wordsHead('review')}<div class="home">
         <div class="home-day">はじめまして</div>
         <h1>Commencez par ajouter du vocabulaire</h1>
         <p class="lead">Chaque mot ajouté devient une carte. FSRS décidera ensuite quand vous la remontrer.</p>
         <div class="home-actions" style="margin-top:26px"><button class="btn primary big" id="goAdd">Ajouter mon premier mot</button></div>
       </div>`;
       $('#goAdd').onclick = () => show('add');
+      wireWordsHead(root);
       return;
     }
 
@@ -201,7 +217,7 @@
       if (c.newTotal) nextTxt += ` ${c.newTotal} nouveau${c.newTotal > 1 ? 'x' : ''} mot${c.newTotal > 1 ? 's' : ''} attend${c.newTotal > 1 ? 'ent' : ''} (limite de ${S.data.settings.newPerDay} par jour atteinte).`;
     }
 
-    root.innerHTML = `<div class="home">
+    root.innerHTML = `${wordsHead('review')}<div class="home">
       <div class="home-day">${dayTxt}</div>
       ${nothing
         ? `<div class="done-mark">完</div><h1>Tout est révisé pour aujourd'hui</h1>`
@@ -228,6 +244,7 @@
       ${c.difficult || (nothing && c.total) ? `<p class="home-note" style="margin-top:4px">L'entraînement ne modifie pas la planification FSRS.</p>` : ''}
     </div>`;
 
+    wireWordsHead(root);
     $('#startBtn') && ($('#startBtn').onclick = startSession);
     $('#practiceHard') && ($('#practiceHard').onclick = () => startPractice('hard'));
     $('#practiceAll') && ($('#practiceAll').onclick = () => startPractice('all'));
@@ -691,8 +708,7 @@
   function renderAdd() {
     const root = $('#view-add');
     const recent = S.data.cards.slice().sort((a, b) => b.created - a.created).slice(0, 12);
-    root.innerHTML = `<div class="view-head"><div><h1><span class="h-jp">追加</span>Ajouter un mot</h1>
-      <p class="lead">Seule l'écriture est obligatoire, mais la lecture, le sens et des exemples rendent la carte bien plus utile.</p></div></div>
+    root.innerHTML = `${wordsHead('add', { html: "Seule l'écriture est obligatoire, mais la lecture, le sens et des exemples rendent la carte bien plus utile." })}
       <div class="form-card" id="addForm">${formHtml()}
         <div class="form-actions"><span class="muted" style="font-size:12.5px"><kbd>Ctrl</kbd> + <kbd>Entrée</kbd> pour ajouter</span><span class="spacer"></span>
           <button class="btn primary" id="saveAdd">Ajouter le mot</button></div>
@@ -777,15 +793,14 @@
   function renderVocab() {
     const root = $('#view-vocab');
     if (!S.data.cards.length) {
-      root.innerHTML = `<div class="view-head"><div><h1><span class="h-jp">単語</span>Vocabulaire</h1></div></div>
+      root.innerHTML = `${wordsHead('vocab')}
         <div class="empty"><div class="empty-kanji">空</div><p>Aucun mot pour l'instant.</p><button class="btn primary" id="goAdd2">Ajouter un mot</button></div>`;
       $('#goAdd2').onclick = () => show('add');
+      wireWordsHead(root);
       return;
     }
     if (!$('#vSearch', root)) {
-      root.innerHTML = `<div class="view-head"><div><h1><span class="h-jp">単語</span>Vocabulaire</h1>
-        <p class="lead" id="vLead"></p></div>
-        <button class="btn primary" id="vAdd">+ Ajouter un mot</button></div>
+      root.innerHTML = `${wordsHead('vocab', { id: 'vLead' })}
         <div class="toolbar">
           <input class="input search" id="vSearch" placeholder="Rechercher (kanji, kana, sens)…" value="${esc(listState.q)}">
           <select class="select" id="vFilter">
@@ -804,7 +819,7 @@
       $('#vSearch').addEventListener('input', (e) => { listState.q = e.target.value; renderVocabList(); });
       $('#vFilter').onchange = (e) => { listState.filter = e.target.value; renderVocabList(); };
       $('#vSort').onchange = (e) => { listState.sort = e.target.value; renderVocabList(); };
-      $('#vAdd').onclick = () => show('add');
+      wireWordsHead(root);
     }
     renderVocabList();
   }
@@ -918,7 +933,7 @@
             <span><kbd>E</kbd></span><span>Modifier la carte affichée</span>
             <span><kbd>P</kbd></span><span>Écouter la prononciation (si une voix japonaise est installée${web ? ' sur l\'appareil' : ' dans Windows'})</span>
             <span><kbd>Ctrl</kbd>+<kbd>N</kbd></span><span>Ajouter un mot</span>
-            <span><kbd>Ctrl</kbd>+<kbd>1…9</kbd></span><span>Changer d'onglet</span>
+            <span><kbd>Ctrl</kbd>+<kbd>1…7</kbd></span><span>Changer d'onglet</span>
             <span><kbd>F11</kbd></span><span>Plein écran (Échap pour en sortir)${web ? '' : ' · mémorisé à la réouverture'}</span>
           </div>
         </div>
@@ -1152,8 +1167,8 @@
     if (isModalOpen()) return;
 
     if (e.ctrlKey && !e.shiftKey && !e.altKey) {
-      const views = ['review', 'vocab', 'add', 'grammar', 'reading', 'writing', 'translation', 'stats', 'settings'];
-      if (/^[1-9]$/.test(e.key)) { e.preventDefault(); show(views[+e.key - 1]); return; }
+      const views = ['review', 'grammar', 'reading', 'writing', 'translation', 'stats', 'settings'];
+      if (/^[1-7]$/.test(e.key)) { e.preventDefault(); show(views[+e.key - 1]); return; }
       if (e.key.toLowerCase() === 'n') { e.preventDefault(); show('add'); return; }
       if (e.key.toLowerCase() === 'z' && !typing && view === 'review' && session) { e.preventDefault(); undo(); return; }
     }

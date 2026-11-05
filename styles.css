@@ -1040,3 +1040,50 @@ input[type="range"] { accent-color: var(--accent); width: 170px; }
 @media (hover: none) and (pointer: coarse) {
   .session-help { display: none; }
 }
+.w-head { align-items: center; }
+
+.nav-fr .nf-s { display: none; }
+@media (max-width: 760px) {
+  /* les 7 onglets tiennent sur la largeur, avec des libellés courts */
+  .nav-fr .nf-l { display: none; }
+  .nav-fr .nf-s { display: inline; }
+  .nav { overflow-x: auto; }
+  .nav-item { flex: 1 1 0; min-width: 44px; padding: 6px 2px 5px; }
+  .nav-jp { font-size: 15.5px; }
+  .nav-fr { font-size: 10px; white-space: nowrap; }
+  .nav-item .badge { right: 0; }
+
+  /* rien ne doit dépasser de l'écran */
+  html, body { max-width: 100%; overflow-x: hidden; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  .main { overflow-x: hidden; }
+  .view, .settings > *, .set-row > *, .form-card, .panel { min-width: 0; }
+  .seg { flex-wrap: wrap; max-width: 100%; }
+
+  /* iOS agrandit la page quand on touche un champ de moins de 16 px : on l'évite */
+  input.input, select.select, textarea.input, .lock .input { font-size: 16px; }
+
+  /* liste de vocabulaire en fiches compactes */
+  .vrow.head { display: none; }
+  .vrow {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "word reading pill" "meaning meaning next";
+    column-gap: 10px; row-gap: 2px; padding: 10px 14px; align-items: baseline;
+  }
+  .vrow > .v-word { grid-area: word; font-size: 19px; }
+  .vrow > .v-reading { grid-area: reading; font-size: 13.5px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .vrow > .pill { grid-area: pill; justify-self: end; }
+  .vrow > .v-meaning { grid-area: meaning; white-space: normal; font-size: 13.5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .vrow > .v-next { grid-area: next; justify-self: end; font-size: 12px; color: var(--text-3); white-space: nowrap; }
+  .vrow > :nth-child(6) { display: none; }
+  .toolbar { flex-wrap: wrap; }
+  .toolbar .search { flex-basis: 100%; min-width: 0; }
+  .toolbar .select { flex: 1 1 140px; min-width: 0; }
+
+  /* formulaires */
+  .ex-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .ex-row > :nth-child(1) { grid-column: 1 / -1; }
+  .key-row { flex-wrap: wrap; }
+  .key-row .input { min-width: 0; flex: 1 1 100%; }
+  .key-row .btn { flex: 1 1 auto; }
+  .form-card { padding: 16px; }
+}
