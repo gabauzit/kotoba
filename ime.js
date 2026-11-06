@@ -37,23 +37,12 @@
     return null;
   }
 
-  /** Réglages navigateur selon la langue (utile surtout sur téléphone) */
-  function hint(el) {
-    const lang = (el.getAttribute('lang') || '').toLowerCase();
-    if (lang.startsWith('ja')) {
-      if (!el.hasAttribute('autocapitalize')) el.setAttribute('autocapitalize', 'off');
-      if (!el.hasAttribute('autocorrect')) el.setAttribute('autocorrect', 'off');
-      if (!el.hasAttribute('spellcheck')) el.spellcheck = false;
-    } else if (lang.startsWith('fr')) {
-      if (!el.hasAttribute('autocapitalize')) el.setAttribute('autocapitalize', 'sentences');
-    }
-  }
-
   let warned = false;
   async function apply(el) {
     const mode = modeOf(el);
     if (!mode) return;
-    hint(el);
+    // Dans un navigateur, on ne touche à rien : modifier un champ au moment où il reçoit le focus
+    // réinitialise le clavier japonais (retour en mode alphanumérique).
     const api = API();
     if (!api || !api.imeSet) return;
     if (window.Store && Store.data && Store.data.settings.autoKeyboard === false) return;
