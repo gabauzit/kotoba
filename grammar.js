@@ -17,6 +17,7 @@
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
   const toast = (...a) => App().toast(...a);
+  const touch = () => window.matchMedia('(hover: none) and (pointer: coarse)').matches;
   const MASTERED_S = 21;
 
   /* =====================================================================
@@ -309,8 +310,7 @@ EXIGENCES :
     if (!root) return;
     const c = G.counts();
     const due = c.review + c.learning;
-    const head = `<div class="view-head g-head"><div><h1><span class="h-jp">文法</span>Grammaire</h1>
-        <p class="lead">Vos structures grammaticales, révisées séparément du vocabulaire.</p></div>
+    const head = `<div class="view-head g-head"><div><h1><span class="h-jp">文法</span>Grammaire</h1></div>
       <div class="seg g-tabs">
         <button data-sub="review" class="${st.sub === 'review' ? 'on' : ''}">Réviser${due + c.newCards ? ` <em>${due + c.newCards}</em>` : ''}</button>
         <button data-sub="list" class="${st.sub === 'list' ? 'on' : ''}">Structures${c.total ? ` <em>${c.total}</em>` : ''}</button>
@@ -450,7 +450,7 @@ EXIGENCES :
     $('#gSave', body).onclick = save;
     form.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.ctrlKey) { e.preventDefault(); save(); } });
     $$('.chip[data-id]', body).forEach(ch => ch.onclick = () => openEditor(+ch.dataset.id));
-    setTimeout(() => { const t = $('#gTitle', body); if (t && !t.value) t.focus(); }, 0);
+    if (!touch()) setTimeout(() => { const t = $('#gTitle', body); if (t && !t.value) t.focus(); }, 0);
   }
 
   /* ---------- Modification (fenêtre) ---------- */
@@ -500,7 +500,7 @@ EXIGENCES :
         G.remove(id); toast('Structure supprimée'); render(); App().renderChrome();
       } else openEditor(id);
     };
-    setTimeout(() => $('#gTitle', box).focus(), 0);
+    if (!touch()) setTimeout(() => $('#gTitle', box).focus(), 0);
   }
 
   /* ---------- Liste ---------- */

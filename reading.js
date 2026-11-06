@@ -728,6 +728,7 @@ EXIGENCES :
 
     if (!ks.hasKey) renderKeyBox($('#rdKey'), () => render());
     wireSetup();
+    window.App.foldCards(rootEl, '.rd-setup > .rd-card', 'lecture', true);
     if (st.animateNext) { st.animateNext = false; Motion.stagger(rootEl, '.key-card, .rd-card, .rd-generate, .hist-item', { step: 40, max: 20 }); }
   }
 

@@ -118,6 +118,7 @@
 
   /* ---------- Onglet Vocabulaire : Réviser · Mots · Ajouter ---------- */
   const WORD_VIEWS = ['review', 'vocab', 'add'];
+  const touchUI = () => window.matchMedia('(hover: none) and (pointer: coarse)').matches;
   function wordsHead(active, lead) {
     const c = S.counts();
     const due = c.learning + c.review + c.newCards;
@@ -129,6 +130,60 @@
       </div></div>`;
   }
   function wireWordsHead(root) { $$('.w-tabs button', root).forEach(b => b.onclick = () => { if (view !== b.dataset.w) show(b.dataset.w); }); }
+
+  /* ---------- Petits écrans : cartes repliables (Lecture, Écriture, Traduction, Réglages) ---------- */
+  const narrow = () => window.matchMedia('(max-width: 760px)').matches;
+  const foldState = new Map(); // clé → ouvert ?
+  function cardSummary(card) {
+    const parts = [];
+    $$('.choice.on b', card).forEach(b => parts.push(b.textContent.trim()));
+    $$('.seg', card).forEach(sg => { const on = $('button.on', sg); if (on) parts.push(on.textContent.trim()); });
+    $$('select', card).forEach(sel => { const o = sel.selectedOptions && sel.selectedOptions[0]; if (o) parts.push(o.textContent.trim()); });
+    $$('.opt-row', card).forEach(r => { const out = $('.range-wrap output', r), lab = $(':scope > label', r); if (out && lab) parts.push(`${lab.textContent.trim()} ${out.textContent.trim()}`); });
+    const chips = $$('.chip-box .tchip, .chip-box .chip', card).length;
+    if (chips) parts.unshift(`${chips} mot${chips > 1 ? 's' : ''}`);
+    return parts.filter(Boolean).slice(0, 4).join(' · ');
+  }
+  /**
+   * Rend les cartes repliables sur téléphone : un appui sur le titre ouvre ou ferme la carte,
+   * et une carte fermée résume ses choix. Sans effet sur grand écran.
+   * @param root   conteneur
+   * @param sel    sélecteur des cartes
+   * @param key    préfixe pour mémoriser l'état (par page)
+   * @param openFirst  ouvrir la première carte par défaut
+   */
+  function foldCards(root, sel, key, openFirst) {
+    if (!root || !narrow()) return;
+    // choix segmentés aux libellés longs : sur deux colonnes
+    $$('.seg', root).forEach(sg => {
+      const n = sg.children.length, len = sg.textContent.replace(/\s+/g, ' ').trim().length;
+      sg.classList.toggle('seg-2col', n >= 4 && len > 40);
+    });
+    $$(sel, root).forEach((card, i) => {
+      const head = $(':scope > .rd-card-head', card) || $(':scope > h3', card);
+      if (!head || card.classList.contains('key-card')) return;
+      const k = `${key}:${i}`;
+      if (!foldState.has(k)) foldState.set(k, openFirst && i === 0);
+      card.classList.add('foldable');
+      card.classList.toggle('folded', !foldState.get(k));
+      let sum = $(':scope > .fold-sum', card);
+      if (!sum) { sum = document.createElement('div'); sum.className = 'fold-sum'; head.after(sum); }
+      const refresh = () => { sum.textContent = cardSummary(card); };
+      refresh();
+      head.classList.add('fold-head');
+      head.setAttribute('role', 'button');
+      head.setAttribute('aria-expanded', String(foldState.get(k)));
+      head.onclick = (e) => {
+        if (e.target.closest('button, a, input, select')) return;
+        const open = card.classList.contains('folded');
+        foldState.set(k, open);
+        card.classList.toggle('folded', !open);
+        head.setAttribute('aria-expanded', String(open));
+        if (open && Motion.ok()) Motion.fadeIn(card, 4, 180);
+      };
+      ['click', 'change', 'input'].forEach(ev => card.addEventListener(ev, () => setTimeout(refresh, 0)));
+    });
+  }
 
   /* ---------- Navigation ---------- */
   function show(v) {
@@ -728,7 +783,9 @@
     $('#saveAdd').onclick = submit;
     form.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.ctrlKey) { e.preventDefault(); submit(); } });
     $$('.chip', root).forEach(ch => ch.onclick = () => openEditor(+ch.dataset.id));
-    setTimeout(() => $('#fWord') && $('#fWord').focus(), 0);
+    wireWordsHead(root);
+    // sur écran tactile, pas de clavier qui s'ouvre tout seul
+    if (!touchUI()) setTimeout(() => $('#fWord') && $('#fWord').focus(), 0);
   }
 
   /* ---------- Éditeur (modale) ---------- */
@@ -784,7 +841,7 @@
         S.deleteCard(id); toast('Mot supprimé'); render();
       } else openEditor(id);
     };
-    setTimeout(() => $('#fWord', box).focus(), 0);
+    if (!touchUI()) setTimeout(() => $('#fWord', box).focus(), 0);
   }
 
   /* =====================================================================
@@ -994,6 +1051,8 @@
     num('#sRoll', 'rolloverHour', 0, 12);
     $('#sTheme').onchange = (e) => { S.updateSettings({ theme: e.target.value }); applyTheme(); };
     if ($('#sSync')) renderSyncBox($('#sSync .sync-box'));
+    if (touchUI()) { const sc = $('.shortcuts', root); if (sc) sc.closest('.set-group').remove(); }
+    foldCards(root, '.set-group', 'settings', false);
     $('#sOpen') && ($('#sOpen').onclick = () => window.kotobaAPI.openFolder());
     $('#sExport').onclick = async () => {
       if (window.kotobaAPI) { const p = await window.kotobaAPI.exportData(JSON.stringify(S.data, null, 1)); if (p) toast('Export enregistré'); }
@@ -1107,7 +1166,7 @@
     const when = (t) => { const d = new Date(t); return `Jour ${S.dayNumber(S.dayKey(t))} · ${String(d.getHours()).padStart(2, '0')} h ${String(d.getMinutes()).padStart(2, '0')}`; };
     const m = openModal(`<h2>Historique des versions</h2>
       <p class="lead">Toutes les versions du fichier de données reçues ou envoyées par cet ordinateur. Restaurer une version la rend à nouveau active sur tous vos appareils ; la version actuelle est gardée dans l'historique.</p>
-      <div class="hist-list">${list.length ? list.map(x => `<div class="hist-row"><span class="hist-when">${when(x.t)}</span><span class="hist-kind">${kinds[x.kind] || x.kind}</span><span class="hist-size">${Math.max(1, Math.round(x.size / 1024))} Ko</span><button class="btn small" data-n="${esc(x.name)}">Restaurer</button></div>`).join('') : '<div class="empty">Aucune version pour l\'instant.</div>'}</div>
+      <div class="vh-list">${list.length ? list.map(x => `<div class="vh-row"><span class="vh-when">${when(x.t)}</span><span class="vh-kind">${kinds[x.kind] || x.kind}</span><span class="vh-size">${Math.max(1, Math.round(x.size / 1024))} Ko</span><button class="btn small" data-n="${esc(x.name)}">Restaurer</button></div>`).join('') : '<div class="empty">Aucune version pour l\'instant.</div>'}</div>
       <div class="form-actions" style="margin-top:16px"><button class="btn ghost" id="hOpen">Ouvrir le dossier</button><span class="spacer"></span><button class="btn" data-a="close">Fermer</button></div>`);
     $('[data-a="close"]', m).onclick = closeModal;
     $('#hOpen', m).onclick = () => api.historyOpen();
@@ -1269,6 +1328,6 @@
     if (cur !== (t === 'light' || t === 'dark' ? t : 'system')) applyTheme();
   }
 
-  window.App = { openEditor, show, toast, openModal, closeModal, confirmBox, formHtml, wireForm, readForm, renderChrome };
+  window.App = { openEditor, show, toast, openModal, closeModal, confirmBox, formHtml, wireForm, readForm, renderChrome, foldCards, touchUI };
   boot();
 })();

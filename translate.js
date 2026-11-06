@@ -335,6 +335,7 @@ EXIGENCES :
 
     if (!ks.hasKey) R.renderKeyBox($(`#trKey-${dir}`, root), () => render(dir));
     wireSetup(dir);
+    window.App.foldCards(root, '.rd-setup > .rd-card', 'exercice-' + dir, true);
     if (st.animate) { st.animate = false; Motion.stagger(root, '.key-card, .rd-card, .rd-generate, .hist-item', { step: 40, max: 20 }); }
   }
 
