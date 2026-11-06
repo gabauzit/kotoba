@@ -19,6 +19,7 @@
     newMixRatio: 3,          // 1 nouveau mot toutes les N révisions
     theme: 'system',
     motion: 'auto',         // animations : auto (comme Windows) | on | off
+    autoKeyboard: true,      // Windows : clavier japonais / français choisi selon le champ
   };
 
   const M = window.KotobaMerge;

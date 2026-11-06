@@ -670,7 +670,7 @@ EXIGENCES :
           <div class="opt-row"><label>Nombre</label><div class="range-wrap"><input type="range" min="0" max="20" value="${p.targetCount}" id="rdCount"><output>${p.targetCount}</output></div>
             <button class="btn ghost small" id="rdReshuffle" title="Choisir d'autres mots">↻ Autre sélection</button></div>
           <div class="chip-box" id="rdChips">${chipsHtml()}</div>
-          <div class="add-word"><input class="input" id="rdAddWord" list="rdWordList" placeholder="Ajouter un mot de ma liste…" autocomplete="off">
+          <div class="add-word"><input class="input" id="rdAddWord" lang="ja" list="rdWordList" placeholder="Ajouter un mot de ma liste…" autocomplete="off">
             <datalist id="rdWordList">${S.data.cards.map(c => `<option value="${esc(c.word)}">${esc(c.reading)} — ${esc(c.meaning)}</option>`).join('')}</datalist></div>
           <div class="checks">
             <label><input type="checkbox" data-pref="includeUnseen" ${p.includeUnseen ? 'checked' : ''}> Inclure des mots jamais révisés <span class="muted small">(sinon, utilisés seulement pour compléter)</span></label>
@@ -686,7 +686,7 @@ EXIGENCES :
           <div class="opt-row"><label>Type</label><select class="select grow" data-pref="genre">${Object.entries(GENRES).map(([k, v]) => `<option value="${k}" ${p.genre === k ? 'selected' : ''}>${esc(v)}</option>`).join('')}</select></div>
           <div class="opt-row"><label>Registre</label><select class="select grow" data-pref="register">
               <option value="auto" ${p.register === 'auto' ? 'selected' : ''}>Selon le type</option><option value="poli" ${p.register === 'poli' ? 'selected' : ''}>Poli (です・ます)</option><option value="neutre" ${p.register === 'neutre' ? 'selected' : ''}>Neutre (だ・である)</option></select></div>
-          <div class="opt-row"><label>Thème</label><input class="input grow" data-pref="theme" value="${esc(p.theme)}" placeholder="ex. un week-end à Kyoto, le travail, la cuisine… (vide = au choix)"></div>
+          <div class="opt-row"><label>Thème</label><input class="input grow" data-pref="theme" lang="fr" value="${esc(p.theme)}" placeholder="ex. un week-end à Kyoto, le travail, la cuisine… (vide = au choix)"></div>
         </section>
 
         <section class="rd-card">
@@ -1143,7 +1143,7 @@ EXIGENCES :
         <div class="ask-sugg">${['Explique la structure de la première phrase', 'Quels sont les mots les plus utiles à retenir ici ?', 'Reformule le texte en japonais plus simple']
           .map(s => `<button class="sugg">${esc(s)}</button>`).join('')}</div>
         <p class="muted small">Vous pouvez aussi sélectionner un passage du texte puis choisir « Expliquer ».</p></div>`}</div>
-      <div class="ask-input"><textarea class="input" id="askInput" rows="2" placeholder="Votre question sur le texte…"></textarea>
+      <div class="ask-input"><textarea class="input" id="askInput" lang="fr" rows="2" placeholder="Votre question sur le texte…"></textarea>
         <button class="btn primary" id="askSend" ${st.askBusy ? 'disabled' : ''}>Envoyer</button></div>
       <div class="ask-foot"><span class="muted small"><kbd>Entrée</kbd> envoyer · <kbd>Maj</kbd>+<kbd>Entrée</kbd> nouvelle ligne</span>
       ${r.chat.length ? '<button class="link-btn clear-chat" id="askClear">Effacer</button>' : ''}</div></div>`;

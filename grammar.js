@@ -334,7 +334,7 @@ EXIGENCES :
   function formHtml(x = {}) {
     const usage = x.usage && x.usage.length ? x.usage : [''];
     return `<div class="field"><label for="gRef">Référence <span class="hint">affichée en haut à gauche de la carte, ex. « N5 Leçon 5 »</span></label>
-        <input class="input" id="gRef" list="gRefList" value="${esc(x.ref)}" autocomplete="off" placeholder="N5 Leçon 5">
+        <input class="input" id="gRef" lang="fr" list="gRefList" value="${esc(x.ref)}" autocomplete="off" placeholder="N5 Leçon 5">
         <datalist id="gRefList">${G.refs().map(r => `<option value="${esc(r)}">`).join('')}</datalist></div>
       <div class="field"><label for="gTitle">Titre</label>
         <input class="input jp-big" id="gTitle" value="${esc(x.title)}" autocomplete="off" lang="ja" placeholder="〜たい">
@@ -343,14 +343,14 @@ EXIGENCES :
         <div id="gUsage">${usage.map(usageRow).join('')}</div>
         <button class="btn ghost" type="button" id="gAddUsage">+ Ajouter une ligne</button></div>
       <div class="field"><label for="gMeaning">Signification</label>
-        <textarea class="input" id="gMeaning" rows="3" placeholder="Sens, nuances, registre, pièges…">${esc(x.meaning)}</textarea></div>
+        <textarea class="input" id="gMeaning" lang="fr" rows="3" placeholder="Sens, nuances, registre, pièges…">${esc(x.meaning)}</textarea></div>
       <div class="field"><label>Exemples <span class="hint">vos phrases ; le passage de la structure est surligné automatiquement</span></label>
         <div id="gEx">${(x.examples && x.examples.length ? x.examples : [{ jp: '', fr: '' }]).map(exampleRow).join('')}</div>
         <button class="btn ghost" type="button" id="gAddEx">+ Ajouter un exemple</button></div>`;
   }
   function exampleRow(e = { jp: '', fr: '' }) {
     return `<div class="ex-row g-ex-row"><input class="input jp g-ex-jp" placeholder="Phrase en japonais" value="${esc(e.jp)}" lang="ja">
-      <input class="input g-ex-fr" placeholder="Traduction" value="${esc(e.fr)}"><button class="btn ghost g-ex-del" type="button" title="Retirer">✕</button></div>`;
+      <input class="input g-ex-fr" placeholder="Traduction" value="${esc(e.fr)}" lang="fr"><button class="btn ghost g-ex-del" type="button" title="Retirer">✕</button></div>`;
   }
   function usageRow(v = '') {
     return `<div class="g-usage-row"><span class="g-dot">·</span><input class="input jp" value="${esc(v)}" placeholder="V（ます形）＋たい" lang="ja"><button class="btn ghost g-del" type="button" title="Retirer">✕</button></div>`;

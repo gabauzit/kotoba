@@ -711,20 +711,20 @@
       </div>
       <div class="grid2">
         <div class="field"><label for="fReading">Lecture <span class="hint">en kana</span></label>
-          <input class="input jp" id="fReading" value="${esc(c.reading)}" autocomplete="off" lang="ja"></div>
+          <input class="input jp" id="fReading" value="${esc(c.reading)}" autocomplete="off" lang="ja" data-ime-from="#fWord"></div>
         <div class="field"><label for="fMeaning">Sens</label>
-          <input class="input" id="fMeaning" value="${esc(c.meaning)}" autocomplete="off"></div>
+          <input class="input" id="fMeaning" value="${esc(c.meaning)}" autocomplete="off" lang="fr"></div>
       </div>
       <div class="field"><label>Exemples de phrases <span class="hint">le mot sera surligné automatiquement</span></label>
         <div id="exRows">${ex.map(exRow).join('')}</div>
         <button class="btn ghost" id="addEx" type="button">+ Ajouter un exemple</button>
       </div>
       <div class="field"><label for="fNotes">Notes <span class="hint">facultatif : kanji, astuce mnémotechnique…</span></label>
-        <textarea class="input" id="fNotes" rows="2" style="width:100%;resize:vertical">${esc(c.notes)}</textarea></div>`;
+        <textarea class="input" id="fNotes" lang="fr" rows="2" style="width:100%;resize:vertical">${esc(c.notes)}</textarea></div>`;
   }
   function exRow(e = { jp: '', fr: '' }) {
     return `<div class="ex-row"><input class="input jp ex-jp-in" placeholder="Phrase en japonais" value="${esc(e.jp)}" lang="ja">
-      <input class="input ex-fr-in" placeholder="Traduction" value="${esc(e.fr)}">
+      <input class="input ex-fr-in" placeholder="Traduction" value="${esc(e.fr)}" lang="fr">
       <button class="btn ghost ex-del" type="button" title="Retirer">✕</button></div>`;
   }
   function wireForm(root, exceptId) {
@@ -972,6 +972,8 @@
             <select class="select" id="sTheme"><option value="system">Comme ${OS}</option><option value="light">Clair</option><option value="dark">Sombre</option></select></div>
           <div class="set-row"><div class="set-text"><b>Animations</b><span>« Comme ${OS} » les réduit si l'option d'accessibilité « Effets d'animation » est désactivée.</span></div>
             <select class="select" id="sMotion"><option value="auto">Comme ${OS}</option><option value="on">Toujours</option><option value="off">Désactivées</option></select></div>
+          ${window.kotobaAPI && window.kotobaAPI.imeSet ? `<div class="set-row"><div class="set-text"><b>Clavier automatique</b><span>Passe tout seul au clavier japonais (hiragana, ou katakana pour un mot en katakana) dans les champs japonais, et au clavier habituel dans les champs en français. Nécessite le clavier japonais de Windows (Microsoft IME).</span></div>
+            <input type="checkbox" class="big-check" id="sKbd" ${s.autoKeyboard !== false ? 'checked' : ''}></div>` : ''}
         </div>
         <div class="set-group"><h3>Données</h3>
           <div class="set-row"><div class="set-text"><b>Sauvegarde automatique</b>
@@ -1050,6 +1052,7 @@
     num('#sLeech', 'leechThreshold', 2, 20);
     num('#sRoll', 'rolloverHour', 0, 12);
     $('#sTheme').onchange = (e) => { S.updateSettings({ theme: e.target.value }); applyTheme(); };
+    $('#sKbd') && ($('#sKbd').onchange = (e) => { S.updateSettings({ autoKeyboard: e.target.checked }); toast(e.target.checked ? 'Clavier automatique activé' : 'Clavier automatique désactivé'); });
     if ($('#sSync')) renderSyncBox($('#sSync .sync-box'));
     if (touchUI()) { const sc = $('.shortcuts', root); if (sc) sc.closest('.set-group').remove(); }
     foldCards(root, '.set-group', 'settings', false);
@@ -1099,8 +1102,8 @@
     if (!info.configured) {
       box.innerHTML = `<p class="set-note">Partagez vos mots, votre grammaire et votre avancement entre cette application et la page web, grâce à un dépôt GitHub <b>privé</b>. Le dépôt garde aussi l'historique de chaque version.</p>
         <div class="sync-form">
-          <label>Dépôt de données<input class="input" id="syRepo" placeholder="propriétaire/kotoba-data" value="${esc(cfg.owner ? cfg.owner + '/' + cfg.repo : '')}" spellcheck="false"></label>
-          <label>Fichier<input class="input" id="syPath" value="${esc(cfg.path || 'kotoba-data.json')}" spellcheck="false"></label>
+          <label>Dépôt de données<input class="input" id="syRepo" data-ime="latin" placeholder="propriétaire/kotoba-data" value="${esc(cfg.owner ? cfg.owner + '/' + cfg.repo : '')}" spellcheck="false"></label>
+          <label>Fichier<input class="input" id="syPath" data-ime="latin" value="${esc(cfg.path || 'kotoba-data.json')}" spellcheck="false"></label>
           <label class="wide">Jeton d'accès (fine-grained)<input class="input" id="syToken" type="password" placeholder="github_pat_…" autocomplete="off" spellcheck="false"></label>
         </div>
         ${tokenHelp()}

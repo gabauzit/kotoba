@@ -53,7 +53,7 @@
       <p class="lock-lead">Vos données sont dans un dépôt GitHub privé. Saisissez votre jeton d'accès GitHub pour les ouvrir sur cet appareil.</p>
       <form id="lockForm" autocomplete="off">
         <label class="lock-repo ${known ? 'known' : ''}">Dépôt de données
-          <input class="input" id="lkRepo" value="${esc(known ? cfg.owner + '/' + cfg.repo : '')}" placeholder="propriétaire/kotoba-data" spellcheck="false" autocapitalize="off"></label>
+          <input class="input" id="lkRepo" data-ime="latin" lang="en" value="${esc(known ? cfg.owner + '/' + cfg.repo : '')}" placeholder="propriétaire/kotoba-data" spellcheck="false" autocapitalize="off"></label>
         <label>Jeton GitHub
           <input class="input" id="lkToken" type="password" placeholder="github_pat_…" spellcheck="false" autocapitalize="off" autocomplete="off"></label>
         <label class="lock-check"><input type="checkbox" id="lkRemember" ${remember() ? 'checked' : ''}> Se souvenir de cet appareil</label>

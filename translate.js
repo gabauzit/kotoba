@@ -306,7 +306,7 @@ EXIGENCES :
           <div class="opt-row"><label>Nombre</label><div class="range-wrap"><input type="range" min="0" max="15" value="${p.targetCount}" data-range="targetCount"><output>${p.targetCount}</output></div>
             <button class="btn ghost small" data-act="reshuffle">↻ Autre sélection</button></div>
           <div class="chip-box" data-chips>${chipsHtml(st.targets)}</div>
-          <div class="add-word"><input class="input" data-addword list="trWords-${dir}" placeholder="Ajouter un mot de ma liste…" autocomplete="off">
+          <div class="add-word"><input class="input" data-addword lang="ja" list="trWords-${dir}" placeholder="Ajouter un mot de ma liste…" autocomplete="off">
             <datalist id="trWords-${dir}">${S.data.cards.map(c => `<option value="${esc(c.word)}">${esc(c.reading)} — ${esc(c.meaning)}</option>`).join('')}</datalist></div>
           <div class="checks"><label><input type="checkbox" data-check="includeUnseen" ${p.includeUnseen ? 'checked' : ''}> Inclure des mots jamais révisés <span class="muted small">(sinon, utilisés seulement pour compléter)</span></label></div>
         </section>
@@ -317,7 +317,7 @@ EXIGENCES :
           <div class="opt-row"><label>Longueur</label>${seg('length', [['courtes', 'Courtes'], ['moyennes', 'Moyennes'], ['longues', 'Longues']], p.length)}</div>
           <div class="opt-row"><label>Registre</label>${seg('register', [['poli', 'Poli (です・ます)'], ['neutre', 'Neutre (forme simple)']], p.register)}</div>
           ${dir === 'jp2fr' ? `<div class="opt-row"><label>Furigana</label>${seg('furigana', [['aucun', 'Aucun'], ['niveau', 'Au-dessus du niveau'], ['tous', 'Tous (hors mes mots)']], p.furigana)}</div>` : ''}
-          <div class="opt-row"><label>Thème</label><input class="input grow" data-text="theme" value="${esc(p.theme)}" placeholder="facultatif : les courses, le travail, un voyage…"></div>
+          <div class="opt-row"><label>Thème</label><input class="input grow" data-text="theme" lang="fr" value="${esc(p.theme)}" placeholder="facultatif : les courses, le travail, un voyage…"></div>
           <p class="muted small opt-note">Une seule requête à l'IA pour préparer l'exercice ; ensuite, vous comparez votre réponse à la solution et vous vous notez vous-même.</p>
         </section>
         <div class="rd-generate">
@@ -609,7 +609,7 @@ EXIGENCES :
         `<button class="fb-word" data-card="${w.c.id}" title="Ouvrir la carte"><span class="jp">${esc(w.c.word)}</span> <span class="muted jp">${esc(w.c.reading)}</span> <span class="muted">${esc(w.c.meaning)}</span></button>`).join('')}</div></div>` : ''}
       <details class="fb-block fb-ask" ${chat.length ? 'open' : ''}><summary class="fb-label">Une question ? Demander à l'IA</summary>
         <div class="fb-chat">${chat.map(m => m.role === 'user' ? `<div class="msg user">${esc(m.text)}</div>` : `<div class="msg bot ${m.error ? 'err' : ''}">${m.error ? esc(m.text) : R.md(m.text)}</div>`).join('')}</div>
-        <div class="ask-input"><textarea class="input" rows="1" data-ask placeholder="ex. Ma version avec が au lieu de は est-elle correcte ?"></textarea><button class="btn" data-act-ask>Demander</button></div>
+        <div class="ask-input"><textarea class="input" rows="1" data-ask lang="fr" placeholder="ex. Ma version avec が au lieu de は est-elle correcte ?"></textarea><button class="btn" data-act-ask>Demander</button></div>
       </details>`;
   }
 
